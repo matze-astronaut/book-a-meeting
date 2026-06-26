@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📅 MeetingBookr™ - Schedule Your Call!!</title>
+<style>
+  /* deliberately lazy. this is the joke. */
+  body {
+    font-family: "Comic Sans MS", "Comic Sans", cursive, sans-serif;
+    background: #008080;
+    color: #000;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+  }
+  .marquee-bar {
+    background: #ffff00;
+    color: #ff0000;
+    font-weight: bold;
+    padding: 4px 0;
+    border-bottom: 3px ridge #c0c0c0;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .marquee-bar span {
+    display: inline-block;
+    padding-left: 100%;
+    animation: scroll 18s linear infinite;
+  }
+  @keyframes scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+  }
+  .container {
+    max-width: 640px;
+    margin: 24px auto;
+    background: #d4d0c8;
+    border: 4px outset #ffffff;
+    padding: 0;
+    box-shadow: 6px 6px 0 rgba(0,0,0,0.4);
+  }
+  .titlebar {
+    background: linear-gradient(90deg, #000080, #1084d0);
+    color: white;
+    text-align: left;
+    padding: 4px 8px;
+    font-size: 14px;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .titlebar .btns { letter-spacing: 2px; }
+  .body-pad { padding: 18px 24px 28px; }
+  h1 {
+    font-size: 30px;
+    color: #ff00ff;
+    text-shadow: 2px 2px 0 #00ffff;
+    margin: 8px 0;
+  }
+  .blink { animation: blink 1s steps(2,start) infinite; }
+  @keyframes blink { to { visibility: hidden; } }
+  .construction {
+    background: #ffcc00;
+    border: 2px dashed #000;
+    padding: 6px;
+    font-weight: bold;
+    margin: 12px 0;
+    font-size: 13px;
+  }
+  button {
+    font-family: inherit;
+    font-size: 16px;
+    padding: 8px 18px;
+    background: #c0c0c0;
+    border: 3px outset #fff;
+    cursor: pointer;
+    margin: 8px 4px;
+  }
+  button:active { border-style: inset; }
+  .cta {
+    font-size: 20px;
+    background: #00cc00;
+    color: #fff;
+    text-shadow: 1px 1px 0 #000;
+    padding: 14px 26px;
+  }
+  .captcha-box {
+    background: #fff;
+    border: 1px solid #999;
+    margin: 16px auto;
+    max-width: 400px;
+    text-align: left;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+  }
+  .captcha-head {
+    background: #4285f4;
+    color: #fff;
+    padding: 12px;
+    font-family: Arial, sans-serif;
+  }
+  .captcha-head small { font-weight: normal; opacity: .9; }
+  .captcha-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3px;
+    padding: 8px;
+  }
+  .tile {
+    aspect-ratio: 1;
+    background: #eee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 34px;
+    cursor: pointer;
+    user-select: none;
+    border: 3px solid transparent;
+  }
+  .tile.sel { border-color: #4285f4; transform: scale(.92); }
+  .captcha-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 12px;
+    border-top: 1px solid #eee;
+  }
+  .verify-btn {
+    background: #4285f4; color: #fff; border: none; border-radius: 3px;
+    padding: 8px 16px; font-size: 14px;
+  }
+  .robot-check {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px; border: 1px solid #d3d3d3; border-radius: 3px;
+    max-width: 280px; margin: 16px auto; background:#f9f9f9;
+    font-family: Arial, sans-serif; font-size: 14px;
+  }
+  .robot-check input { width: 26px; height: 26px; }
+  .err {
+    color: #d00; font-weight: bold; font-family: Arial, sans-serif;
+    font-size: 13px; margin: 8px 0; min-height: 18px;
+  }
+  .spinner {
+    display:inline-block; width:18px;height:18px;
+    border:3px solid #ccc;border-top-color:#4285f4;border-radius:50%;
+    animation: spin .7s linear infinite; vertical-align:middle;
+  }
+  @keyframes spin { to { transform: rotate(360deg);} }
+  .counter {
+    font-family: monospace; background:#000; color:#0f0;
+    display:inline-block; padding:2px 8px; letter-spacing:3px;
+    border:1px solid #0f0; margin-top:10px;
+  }
+  .reveal { text-align: left; }
+  .reveal h2 { color:#000080; }
+  .reveal p { font-size: 15px; line-height: 1.55; }
+  .stamp {
+    transform: rotate(-8deg);
+    border: 4px solid #d00; color:#d00;
+    display:inline-block; padding:6px 14px; font-weight:bold;
+    font-size: 22px; letter-spacing:2px; margin: 10px 0;
+    font-family: Arial, sans-serif;
+  }
+  .small { font-size: 11px; color:#444; }
+  a { color: #0000ee; }
+  .footer { font-size: 11px; color:#006; margin-top:14px; }
+</style>
+</head>
+<body>
+<div class="marquee-bar"><span>🔒 SECURE MEETING GATEWAY — your connection is being verified — please complete the human verification below to access the scheduler 🔒 powered by MeetingBookr™ 🔒</span></div>
+
+<div class="container">
+  <div class="titlebar">
+    <span>📅 MeetingBookr.exe</span>
+    <span class="btns">_ □ ✕</span>
+  </div>
+  <div class="body-pad">
+
+    <!-- STEP 0: security gate intro -->
+    <div id="step-landing">
+      <h1>🔒 Human Verification</h1>
+      <p>To protect <b>Lav's</b> calendar from automated outreach tools, access to the meeting scheduler requires verification.</p>
+      <div class="construction">⚠ Please complete <b>3 quick security checks</b> to confirm you are a real human. The scheduler will load automatically once verified. ⚠</div>
+      <button class="cta" onclick="go('c1')">🔒 Begin Verification →</button>
+      <div class="counter">QUEUE POSITION: 0000003</div>
+      <div class="small">⏱ Estimated time to verify: under 2 minutes</div>
+    </div>
+
+    <!-- STEP 1: robot checkbox -->
+    <div id="step-c1" style="display:none">
+      <h1>Security Check 1 of 2</h1>
+      <p class="small">Step 1 of 2 — just a quick formality 🙂</p>
+      <div class="robot-check">
+        <input type="checkbox" id="cb1" onclick="checkbox1()">
+        <span>I'm not a robot<br><span style="font-size:10px;color:#888">(and I don't send cold emails)</span></span>
+        <div style="margin-left:auto;text-align:center;font-size:9px;color:#aaa">reCATCHA<br>Privacy · Terms</div>
+      </div>
+      <div class="err" id="err1"></div>
+    </div>
+
+    <!-- STEP 2: image grid -->
+    <div id="step-c2" style="display:none">
+      <h1>Security Check 2 of 2</h1>
+      <div class="captcha-box">
+        <div class="captcha-head">
+          Select all images containing<br>
+          <b style="font-size:18px">genuine, non-templated sales intent</b>
+          <br><small>Click verify once there are none left.</small>
+        </div>
+        <div class="captcha-grid" id="grid2"></div>
+        <div class="captcha-foot">
+          <span style="font-size:20px">🔄 ℹ️ 🎧</span>
+          <button class="verify-btn" onclick="verify2()">VERIFY</button>
+        </div>
+      </div>
+      <div class="err" id="err2"></div>
+    </div>
+
+    <!-- STEP 3: absurd grid -->
+    <div id="step-c3" style="display:none">
+      <h1>Security Check 3 of 3</h1>
+      <div class="captcha-box">
+        <div class="captcha-head">
+          Select all squares that contain<br>
+          <b style="font-size:18px">a reason I should take this call</b>
+          <br><small>If you can't find any, neither could I.</small>
+        </div>
+        <div class="captcha-grid" id="grid3"></div>
+        <div class="captcha-foot">
+          <span style="font-size:20px">🔄 ℹ️ 🎧</span>
+          <button class="verify-btn" onclick="verify3()">VERIFY</button>
+        </div>
+      </div>
+      <div class="err" id="err3"></div>
+    </div>
+
+    <!-- STEP 4: reveal -->
+    <div id="step-reveal" style="display:none">
+      <div class="reveal">
+        <div style="text-align:center"><div class="stamp">VERIFICATION FAILED</div></div>
+        <h2>👋 Hi there. Let's be honest with each other.</h2>
+        <p>You clicked a "book a meeting" link from someone who replied warmly to your cold pitch. So you got your hopes up, then sat through <b>round after round of captchas</b> that were never going to let you through.</p>
+        <p>Annoying, right? Felt like a waste of your time?</p>
+        <p><b>That's the point.</b> That's exactly what your unsolicited email did to me — except I get a dozen of them a day, every one promising "game-changing synergy" and a "quick 15 minutes."</p>
+        <p>This page took about as much genuine effort as your outreach did. Comic Sans and a fake captcha for a fake meeting. Lazy in, lazy out. Fair trade. 🤝</p>
+        <p><b>So here's the actual ask:</b> please remove me from your list and stop sending cold emails to people who never asked. If your product is genuinely good, you won't need to ambush strangers' inboxes to find that out.</p>
+        <p style="margin-top:22px">No hard feelings. Now go delete a CSV row. 🗑️</p>
+        <p class="small">— A human who values her time as much as you value yours</p>
+      </div>
+      <button onclick="restart()">↺ Make me suffer again</button>
+      <div class="footer">MeetingBookr™ is not a real product. No meetings were booked. No robots were verified. © forever</div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// the worst captcha engine ever written, on purpose
+function go(id){
+  ['landing','c1','c2','c3','reveal'].forEach(s=>{
+    document.getElementById('step-'+s).style.display='none';
+  });
+  document.getElementById('step-'+id).style.display='block';
+  window.scrollTo(0,0);
+  if(id==='c2') buildGrid('grid2', verify2);
+  if(id==='c3') buildGrid('grid3', verify3);
+}
+
+// step 1: checkbox that pretends to think, then fails
+function checkbox1(){
+  var cb=document.getElementById('cb1');
+  var err=document.getElementById('err1');
+  if(!cb.checked) return;
+  cb.disabled=true;
+  err.innerHTML='<span class="spinner"></span> Verifying humanity...';
+  setTimeout(function(){
+    err.innerHTML='❌ Hmm, that looked a little too eager. Bots click fast. Step 2 of 2 →';
+    setTimeout(function(){ go('c2'); }, 1400);
+  }, 1600);
+}
+
+var EMOJIS = ['📧','🤖','📨','💼','📊','🔁','📈','🦗','💸'];
+function buildGrid(gridId, verifyFn){
+  var grid=document.getElementById(gridId);
+  grid.innerHTML='';
+  for(var i=0;i<9;i++){
+    var d=document.createElement('div');
+    d.className='tile';
+    d.textContent=EMOJIS[i];
+    d.onclick=(function(el){return function(){ el.classList.toggle('sel'); };})(d);
+    grid.appendChild(d);
+  }
+}
+
+function verify2(){
+  var err=document.getElementById('err2');
+  err.innerHTML='<span class="spinner"></span> Analyzing selection...';
+  setTimeout(function(){
+    err.innerHTML='❌ Final verification failed.';
+    setTimeout(function(){ go('reveal'); }, 1200);
+  }, 1400);
+}
+
+var fail3=0;
+function verify3(){
+  var err=document.getElementById('err3');
+  fail3++;
+  err.innerHTML='<span class="spinner"></span> Cross-referencing your value proposition...';
+  setTimeout(function(){
+    if(fail3>=2){
+      err.innerHTML='❌ Final verification failed.';
+      setTimeout(function(){ go('reveal'); }, 1200);
+    } else {
+      err.innerHTML='❌ No valid reasons detected. New squares loaded. Try again.';
+      buildGrid('grid3', verify3);
+    }
+  }, 1300);
+}
+
+function restart(){ fail2=0; fail3=0; document.getElementById('cb1').checked=false; document.getElementById('cb1').disabled=false; document.getElementById('err1').innerHTML=''; go('landing'); }
+</script>
+</body>
+</html>
